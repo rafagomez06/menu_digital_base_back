@@ -37,7 +37,7 @@ cp .env.template .env
 # Editar .env con tus credenciales de PostgreSQL
 ```
 
-### 4. Levantar el servidorss
+### 4. Levantar el servidors
 ```bash
 flask run
 # o

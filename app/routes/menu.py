@@ -55,7 +55,11 @@ def listar_platillos():
         LOG.error(f"Error inesperado: {str(e)} | Trace: {error_trace}")
         raise UnexpectedError("Ocurrió un error inesperado")
 
+# #####################################
+# RUTAS PRIVADAS JWT
+# #####################################
 @menu_bp.route("/platillos", methods=["POST"])
+@jwt_required()
 def crear_platillo():
     try:
         data = request.form
@@ -142,6 +146,7 @@ def crear_platillo():
     
 
 @menu_bp.route("/platillos/<int:id_platillo>", methods=["PUT"])
+@jwt_required()
 def editar_platillo(id_platillo):
     try:
         data = request.form
@@ -234,6 +239,7 @@ def editar_platillo(id_platillo):
         raise UnexpectedError("Ocurrió un error inesperado")
 
 @menu_bp.route("/platillos/<int:id_platillo>", methods=["DELETE"])
+@jwt_required()
 def eliminar_platillo(id_platillo):
     try:
         platillo = db.session.get(CtlPlatillos, id_platillo)      
@@ -258,152 +264,3 @@ def eliminar_platillo(id_platillo):
         error_trace = traceback.format_exc()
         LOG.error(f"Error inesperado: {str(e)} | Trace: {error_trace}")
         raise UnexpectedError("Ocurrió un error inesperado")    
-
-
-
-# # ─────────────────────────────────────────────────────────────────────────────
-# # RUTAS DE ADMINISTRADOR (requieren JWT)
-# # ─────────────────────────────────────────────────────────────────────────────
-
-# @menu_bp.route("/admin/celulares", methods=["GET"])
-# @jwt_required()
-# def admin_listar_platillos():
-#     """
-#     GET /api/admin/celulares
-#     Lista TODOS los equipos (activos e inactivos) para la tabla del panel admin.
-#     """
-#     try:
-#         celulares = Celular.query.order_by(Celular.created_at.desc()).all()
-#         return api_response(200, [c.to_dict() for c in celulares])
-#     except SQLAlchemyError as e:
-#         LOG.error(f"DB error en admin_listar_platillos: {str(e)}")
-#         raise DatabaseError("Error al obtener los equipos")
-
-
-# @menu_bp.route("/admin/celulares", methods=["POST"])
-# @jwt_required()
-# def admin_crear_celular():
-#     """
-#     POST /api/admin/celulares
-#     Crea un nuevo equipo celular. Las imágenes se suben por separado.
-#     Body JSON requerido:
-#     {
-#         "marca": "Samsung",
-#         "nombre": "Galaxy S24",
-#         "almacenamiento_gb": 256,
-#         "precio": 12999.00,
-#         "bateria_porcentaje": 90,
-#         "estado_id": 1
-#     }
-#     """
-#     try:
-#         data = request.get_json()
-
-#         campos_requeridos = ["marca", "nombre", "almacenamiento_gb", "precio", "bateria_porcentaje", "estado_id"]
-#         faltantes = [c for c in campos_requeridos if not data.get(c)]
-#         if faltantes:
-#             raise MissingValueError(f"Campos requeridos faltantes: {', '.join(faltantes)}")
-
-#         # Validar que el estado exista
-#         estado = EstadoEquipo.query.get(data["estado_id"])
-#         if not estado:
-#             raise NotFoundError(f"Estado con id {data['estado_id']} no existe")
-
-#         # Validar rango de batería
-#         bateria = int(data["bateria_porcentaje"])
-#         if not (0 <= bateria <= 100):
-#             raise MissingValueError("bateria_porcentaje debe ser un valor entre 0 y 100")
-
-#         nuevo = Celular(
-#             marca              = data["marca"].strip(),
-#             nombre             = data["nombre"].strip(),
-#             almacenamiento_gb  = int(data["almacenamiento_gb"]),
-#             precio             = float(data["precio"]),
-#             bateria_porcentaje = bateria,
-#             estado_id          = data["estado_id"],
-#             activo             = data.get("activo", True),
-#         )
-
-#         db.session.add(nuevo)
-#         db.session.commit()
-
-#         LOG.info(f"Celular creado: {nuevo.marca} {nuevo.nombre} (id={nuevo.id})")
-#         return api_response(201, nuevo.to_dict())
-
-#     except (MissingValueError, NotFoundError):
-#         raise
-#     except SQLAlchemyError as e:
-#         db.session.rollback()
-#         LOG.error(f"DB error en admin_crear_celular: {str(e)}")
-#         raise DatabaseError("Error al crear el equipo")
-
-
-# @menu_bp.route("/admin/celulares/<int:celular_id>", methods=["PUT"])
-# @jwt_required()
-# def admin_editar_celular(celular_id):
-#     """
-#     PUT /api/admin/celulares/<id>
-#     Actualiza los datos de un equipo existente.
-#     """
-#     try:
-#         celular = Celular.query.get(celular_id)
-#         if not celular:
-#             raise NotFoundError(f"Equipo con id {celular_id} no encontrado")
-
-#         data = request.get_json()
-
-#         # Actualiza solo los campos que vengan en el body
-#         if "marca"              in data: celular.marca              = data["marca"].strip()
-#         if "nombre"             in data: celular.nombre             = data["nombre"].strip()
-#         if "almacenamiento_gb"  in data: celular.almacenamiento_gb  = int(data["almacenamiento_gb"])
-#         if "precio"             in data: celular.precio             = float(data["precio"])
-#         if "activo"             in data: celular.activo             = bool(data["activo"])
-
-#         if "bateria_porcentaje" in data:
-#             bateria = int(data["bateria_porcentaje"])
-#             if not (0 <= bateria <= 100):
-#                 raise MissingValueError("bateria_porcentaje debe ser un valor entre 0 y 100")
-#             celular.bateria_porcentaje = bateria
-
-#         if "estado_id" in data:
-#             estado = EstadoEquipo.query.get(data["estado_id"])
-#             if not estado:
-#                 raise NotFoundError(f"Estado con id {data['estado_id']} no existe")
-#             celular.estado_id = data["estado_id"]
-
-#         db.session.commit()
-#         LOG.info(f"Celular actualizado id={celular_id}")
-#         return api_response(200, celular.to_dict())
-
-#     except (MissingValueError, NotFoundError):
-#         raise
-#     except SQLAlchemyError as e:
-#         db.session.rollback()
-#         LOG.error(f"DB error en admin_editar_celular: {str(e)}")
-#         raise DatabaseError("Error al actualizar el equipo")
-
-
-# @menu_bp.route("/admin/celulares/<int:celular_id>", methods=["DELETE"])
-# @jwt_required()
-# def admin_eliminar_celular(celular_id):
-#     """
-#     DELETE /api/admin/celulares/<id>
-#     Elimina un equipo y todas sus imágenes asociadas.
-#     """
-#     try:
-#         celular = Celular.query.get(celular_id)
-#         if not celular:
-#             raise NotFoundError(f"Equipo con id {celular_id} no encontrado")
-
-#         db.session.delete(celular)   # cascade elimina también las imágenes
-#         db.session.commit()
-
-#         LOG.info(f"Celular eliminado id={celular_id}")
-#         return api_response(200, {"mensaje": f"Equipo {celular_id} eliminado correctamente"})
-
-#     except NotFoundError:
-#         raise
-#     except SQLAlchemyError as e:
-#         db.session.rollback()
-#         LOG.error(f"DB error en admin_eliminar_celular: {str(e)}")
-#         raise DatabaseError("Error al eliminar el equipo")

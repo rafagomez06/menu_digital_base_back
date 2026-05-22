@@ -29,7 +29,7 @@ def create_app(env: str = "default") -> Flask:
     # Carpeta de uploads  
     upload_path = os.path.join(app.root_path, "..", app.config["UPLOAD_FOLDER"])
     os.makedirs(upload_path, exist_ok=True)
-    # Servir imágenes estáticas desde /uploads 
+    # Servir imagenes estaticas desde /uploads 
     from flask import send_from_directory
 
     @app.route("/uploads/platillos/<path:filename>")
@@ -38,7 +38,6 @@ def create_app(env: str = "default") -> Flask:
         from flask import send_from_directory
         
         # Obtenemos la ruta absoluta directa al directorio de uploads
-        #ruta_base_proyecto = os.path.abspath(os.path.join(current_app.root_path, ".."))
         ruta_base_proyecto = os.path.abspath(os.path.join(app.root_path, ".."))        
         carpeta_final = os.path.join(ruta_base_proyecto, "static", "uploads", "platillos")     
         return send_from_directory(carpeta_final, filename)
@@ -47,13 +46,11 @@ def create_app(env: str = "default") -> Flask:
     from app.routes.auth      import auth_bp
     from app.routes.menu      import menu_bp
     from app.routes.catalogos import catalogos_bp
-    from app.routes.imagenes  import imagenes_bp
     
     # Rutas
-    #app.register_blueprint(auth_bp,      url_prefix="/api/v1/auth")
+    app.register_blueprint(auth_bp,      url_prefix="/api/v1/auth")
     app.register_blueprint(menu_bp, url_prefix="/api/v1/menu")
     app.register_blueprint(catalogos_bp, url_prefix="/api/v1/catalogos")    
-    #app.register_blueprint(imagenes_bp,  url_prefix="/api/v1/admin")
 
 
 

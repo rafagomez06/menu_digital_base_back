@@ -3,12 +3,13 @@ from app.main import db, bcrypt
 
 
 class UsuarioAdmin(db.Model):
-    __tablename__ = "ctl_usuarios_sistema"
+    __tablename__ = "ctl_usuarios_sistema_menu"
 
     id            = db.Column(db.Integer, primary_key=True)
     nombre      = db.Column(db.String(100), nullable=False, unique=True)
     password_hash = db.Column(db.String(255), nullable=False)
     fecha_creacion = db.Column(db.DateTime, default=datetime.utcnow)
+    usuario_creacion = db.Column(db.String(100), nullable=True) 
 
     def set_password(self, password: str):
         resultado = self.password_hash = bcrypt.generate_password_hash(password).decode("utf-8")

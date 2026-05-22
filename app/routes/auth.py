@@ -5,8 +5,8 @@ from app.models.usuario import UsuarioAdmin
 from app.utils.response import api_response
 from app.utils.RaiseException import MissingValueError, UnauthorizedError, UnexpectedError
 from app.utils.Logger import logger
-from app.utils.Messages import (
-            STATUS_CODE_201,STATUS_CODE_400,USER_CORTO,ADMIN_CREADO_EXITOSAMENTE,
+from app.utils.Messages import (LOGIN_SUCCESS,
+            STATUS_CODE_201,STATUS_CODE_200,STATUS_CODE_400,USER_CORTO,ADMIN_CREADO_EXITOSAMENTE,
             ADMIN_EXISTENTE,PASSWORD_CORTO,CAMPOS_REQUERIDOS,SUCCESS,ERROR)
 from app.main import db, bcrypt
 
@@ -33,11 +33,10 @@ def login():
 
     token = create_access_token(identity=str(usuario.id))
     LOG.info(f"Login exitoso: {nombre_usuario}")
-
-    return api_response(200, {
-        "token":    token,
-        "usuario":  usuario.to_dict(),
-    })
+    
+    return api_response(STATUS_CODE_200, {
+            "token": token,
+            "usuario": usuario.to_dict()},SUCCESS,LOGIN_SUCCESS)
 
 
 @auth_bp.route("/me", methods=["GET"])
@@ -52,9 +51,7 @@ def me():
 
     if not usuario:
         raise UnauthorizedError("Usuario no encontrado")
-
-    return api_response(200, usuario.to_dict())
-
+    return api_response(STATUS_CODE_200,usuario.to_dict(),SUCCESS,LOGIN_SUCCESS)
 
 @auth_bp.route("/registrar", methods=["POST"])
 def registrar_admin():
@@ -70,13 +67,13 @@ def registrar_admin():
     # Validar que no exista el admin
     usuario_existente = UsuarioAdmin.query.filter_by(nombre=nombre_usuario).first()
     if usuario_existente:
-        return api_response(STATUS_CODE_400,None,ERROR,ADMIN_EXISTENTE)
+        return api_response(STATUS_CODE_400,{},ERROR,ADMIN_EXISTENTE)
     
     # Validar longitud de usuario y contraseña
     if (len(nombre_usuario) <=3):
-        return api_response(STATUS_CODE_400,None,ERROR,USER_CORTO)    
+        return api_response(STATUS_CODE_400,{},ERROR,USER_CORTO)    
     if (len(password) < 6):
-        return api_response(STATUS_CODE_400,None,ERROR,PASSWORD_CORTO)
+        return api_response(STATUS_CODE_400,{},ERROR,PASSWORD_CORTO)
     
     # Crear nuevo admin
     nuevo_admin = UsuarioAdmin(nombre=nombre_usuario)
