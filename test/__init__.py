@@ -1,1 +1,1 @@
-# Tests — por implementar en sprints posteriores
+# Tests por implementar en sprints posteriores

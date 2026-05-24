@@ -14,7 +14,7 @@ LOG  = logger()
 AuthController  = Blueprint("auth", __name__)
 
 @AuthController.route("/login", methods=["POST"])
-def login_v2():
+def login():
     data = request.get_json()
     return AuthServices.login_admin(data)
 
@@ -22,19 +22,3 @@ def login_v2():
 def registrar_admin():
     data = request.get_json()
     return AuthServices.registrar_admin(data)
-
-
-# @AuthController.route("/me", methods=["GET"])
-# @jwt_required()
-# def me():
-#     """
-#     GET /api/auth/me
-#     Requiere JWT. Retorna los datos del administrador autenticado.
-#     """
-#     usuario_id = get_jwt_identity()
-#     usuario    = UsuarioAdmin.query.get(usuario_id)
-
-#     if not usuario:
-#         raise UnauthorizedError("Usuario no encontrado")
-#     return api_response(STATUS_CODE_200,usuario.to_dict(),SUCCESS,LOGIN_SUCCESS)
-

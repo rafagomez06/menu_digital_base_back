@@ -58,7 +58,7 @@ class FileTools:
                 img.verify()
             return True
         except Exception as e:
-            LOG.error(f"Archivo no es imagen válida: {ruta_completa} — {str(e)}")
+            LOG.error(f"Archivo no es imagen válida: {ruta_completa} {str(e)}")
             return False
 
     @staticmethod

@@ -21,7 +21,7 @@ class CatalogoService:
                 LOG.warning(f"GET /categorias-platillos")
                 return api_response(STATUS_CODE_404, None,ERROR,ERROR_EMPTY)
 
-            LOG.info(f"GET /categorias-platillos — {len(categorias)} resultados")
+            LOG.info(f"GET /categorias-platillos {len(categorias)} resultados")
             categorias_json = [c.to_dict() for c in categorias]
             
             return api_response(STATUS_CODE_200,categorias_json,SUCCESS)

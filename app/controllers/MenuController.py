@@ -3,7 +3,7 @@ from flask_jwt_extended import jwt_required
 from app.utils.Messages import *
 from app.utils.Logger import logger
 from app.services.MenuServices import MenuServices
-LOG           = logger()
+LOG  = logger()
 MenuController  = Blueprint("menu", __name__)
 
 # #####################################
