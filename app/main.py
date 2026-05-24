@@ -6,7 +6,7 @@ from flask_jwt_extended import JWTManager
 from flask_bcrypt import Bcrypt
 from flask_cors import CORS
 
-# Extensiones — se instancian sin app (patrón Application Factory)
+# Extensiones se instancian sin app (patron Application Factory)
 db      = SQLAlchemy()
 migrate = Migrate()
 jwt     = JWTManager()
@@ -25,36 +25,19 @@ def create_app(env: str = "default") -> Flask:
     jwt.init_app(app)
     bcrypt.init_app(app)
     CORS(app, origins=["http://localhost:3000"])   # React en desarrollo
+    URL_PREFIX = '/api/v1'
 
-    # Carpeta de uploads  
-    upload_path = os.path.join(app.root_path, "..", app.config["UPLOAD_FOLDER"])
-    os.makedirs(upload_path, exist_ok=True)
-    # Servir imagenes estaticas desde /uploads 
-    from flask import send_from_directory
+    # Registrar Rutas de entrada 
+    from app.controllers.AuthController import AuthController
+    from app.controllers.MenuController import MenuController
+    from app.controllers.CatalogoController import CatalogoController
 
-    @app.route("/uploads/platillos/<path:filename>")
-    def serve_image(filename):
-        import os
-        from flask import send_from_directory
-        
-        # Obtenemos la ruta absoluta directa al directorio de uploads
-        ruta_base_proyecto = os.path.abspath(os.path.join(app.root_path, ".."))        
-        carpeta_final = os.path.join(ruta_base_proyecto, "static", "uploads", "platillos")     
-        return send_from_directory(carpeta_final, filename)
-    
-    # Registrar Blueprints 
-    from app.routes.auth      import auth_bp
-    from app.routes.menu      import menu_bp
-    from app.routes.catalogos import catalogos_bp
-    
-    # Rutas
-    app.register_blueprint(auth_bp,      url_prefix="/api/v1/auth")
-    app.register_blueprint(menu_bp, url_prefix="/api/v1/menu")
-    app.register_blueprint(catalogos_bp, url_prefix="/api/v1/catalogos")    
+    # Rutas Endpoints
+    app.register_blueprint(AuthController, url_prefix=f"{URL_PREFIX}/auth")
+    app.register_blueprint(MenuController,  url_prefix=f"{URL_PREFIX}/menu")
+    app.register_blueprint(CatalogoController, url_prefix=f"{URL_PREFIX}/catalogos")
 
-
-
-    # ── Manejadores de errores globales 
+    # Manejadores de errores globales 
     _register_error_handlers(app)
 
     return app
