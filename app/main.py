@@ -5,6 +5,7 @@ from flask_migrate import Migrate
 from flask_jwt_extended import JWTManager
 from flask_bcrypt import Bcrypt
 from flask_cors import CORS
+from app.utils.Messages import URL_PREFIX
 
 # Extensiones se instancian sin app (patron Application Factory)
 db      = SQLAlchemy()
@@ -25,7 +26,6 @@ def create_app(env: str = "default") -> Flask:
     jwt.init_app(app)
     bcrypt.init_app(app)
     CORS(app, origins=["http://localhost:3000"])   # React en desarrollo
-    URL_PREFIX = '/api/v1'
 
     # Registrar Rutas de entrada 
     from app.controllers.AuthController import AuthController

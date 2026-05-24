@@ -2,7 +2,7 @@
 SUCCESS = 'Success'
 ERROR = 'Error'
 MENSAJE = 'Mensaje'
-
+URL_PREFIX = '/api/v1'
 UPLOAD_FOLDER = 'static/uploads/platillos'
 
 # Mensajes validaciones

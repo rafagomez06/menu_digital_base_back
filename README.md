@@ -1,4 +1,4 @@
-# Menú Digital — Backend API
+# Menú Digital - Backend API
 
 API REST desarrollada con **Python + Flask + SQLAlchemy + PostgreSQL**.
 
