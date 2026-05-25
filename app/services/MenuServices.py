@@ -30,6 +30,7 @@ class MenuServices:
                 return api_response(STATUS_CODE_404, {},ERROR,ERROR_EMPTY)
             
             LOG.info(f"GET /menu - {len(platillos)} resultados")
+            
             menu_json = [c.to_dict() for c in platillos]
             
             return api_response(STATUS_CODE_200, menu_json, SUCCESS)
@@ -64,6 +65,7 @@ class MenuServices:
             foto = files['imagen']
             nombre_platillo = data.get("nombre")
             descripcion = data.get("descripcion")
+            popular = data.get("popular")
             precio_raw = data.get("precio")
 
             try:
@@ -98,6 +100,7 @@ class MenuServices:
                 precio=precio,
                 categoria_platillo_fk=int(data["categoria_platillo_fk"]),
                 descripcion=descripcion,
+                popular=popular,
                 imagen_url=imagen_url_db,
             )
 

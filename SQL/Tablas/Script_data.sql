@@ -20,7 +20,8 @@ CREATE TABLE ctl_platillos (
     categoria_platillo_fk INTEGER NOT NULL REFERENCES cat_categorias_platillos(id_categoria) ON DELETE RESTRICT,
     descripcion VARCHAR(300) NOT NULL,
     imagen_url VARCHAR(100) NOT NULL,
-    activo INTEGER DEFAULT 1 CHECK (activo IN (0, 1)),
+    popular SMALLINT DEFAULT 0 CHECK (popular IN (0, 1)),
+    activo SMALLINT DEFAULT 1 CHECK (activo IN (0, 1)),
     fecha_creacion TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 

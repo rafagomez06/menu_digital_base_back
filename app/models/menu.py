@@ -20,7 +20,8 @@ class CtlPlatillos(db.Model):
     )
     descripcion = Column(String(350), nullable=False)
     imagen_url = Column(String(100), nullable=False)
-    activo = Column(Integer, default=1, nullable=False)
+    popular = Column(Integer, default=0, nullable=False)
+    activo = Column(Integer, default=1, nullable=False) 
     fecha_creacion = Column(DateTime, server_default=func.now(), nullable=False)
     
     # Relación ORM (carga perezosa por defecto)
@@ -42,6 +43,7 @@ class CtlPlatillos(db.Model):
             "categoria_descripcion": self.categoria.descripcion if self.categoria else None,
             "descripcion": self.descripcion,
             "imagen_url": self.imagen_url,
+            "popular": self.popular,
             "activo": self.activo,
             "fecha_creacion": self.fecha_creacion.isoformat() if self.fecha_creacion else None
         }
