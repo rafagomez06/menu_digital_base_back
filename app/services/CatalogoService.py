@@ -1,5 +1,6 @@
 from sqlalchemy.exc import SQLAlchemyError
-from app.models.catalogo import CatCategoriasPlatillos
+from app.models.CatalogoModel import CatCategoriasPlatillos
+from app.repositories.CatalogoRepository import CatalogoRepository
 from app.utils.response import api_response
 from app.utils.RaiseException import UnexpectedError
 from app.utils.Logger import logger
@@ -11,11 +12,10 @@ LOG = logger()
 
 class CatalogoService:
     @staticmethod
-    def listar_categorias():
+    def obtener_categorias_activas():
         try:
-
-            query = CatCategoriasPlatillos.query.filter(CatCategoriasPlatillos.activo == 1)
-            categorias = query.order_by(CatCategoriasPlatillos.id_categoria.asc()).all()
+            # Obtenemos categorias activas
+            categorias = CatalogoRepository.obtener_categorias_activas()
             
             if not categorias:
                 LOG.warning(f"GET /categorias-platillos")
@@ -23,12 +23,7 @@ class CatalogoService:
 
             LOG.info(f"GET /categorias-platillos {len(categorias)} resultados")
             categorias_json = [c.to_dict() for c in categorias]
-            
             return api_response(STATUS_CODE_200,categorias_json,SUCCESS)
-        
-        except SQLAlchemyError as e: 
-            LOG.error(f"DB error en listar_categorias: {str(e)}")
-            raise DatabaseError("Error al consultar la base de datos")
         except ValueError as e: 
             LOG.warning(f"Parámetro inválido: {str(e)}")
             raise UnexpectedError("Parámetros de búsqueda inválidos")

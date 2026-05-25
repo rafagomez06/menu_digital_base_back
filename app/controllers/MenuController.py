@@ -11,8 +11,8 @@ MenuController  = Blueprint("menu", __name__)
 # #####################################
 
 @MenuController.route("/platillos", methods=["GET"])
-def listar_platillos():
-    return MenuServices.listar_platillos()
+def obtener_platillos():
+    return MenuServices.obtener_platillos()
 
 # #####################################
 # Rutas privadas (JWT)

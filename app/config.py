@@ -21,7 +21,8 @@ class Config:
     MAX_CONTENT_LENGTH            = env.max_content_length
 
     # JWT token expira en 8 horas por defecto
-    JWT_ACCESS_TOKEN_EXPIRES = timedelta(minutes=15)
+    JWT_ACCESS_TOKEN_EXPIRES = timedelta(hours=12)
+    # JWT_ACCESS_TOKEN_EXPIRES = timedelta(minutes=15)
     #JWT_ACCESS_TOKEN_EXPIRES = timedelta(seconds=10)
     
 

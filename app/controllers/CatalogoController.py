@@ -13,5 +13,5 @@ CatalogoController  = Blueprint("catalogos", __name__)
 
 @CatalogoController.route("/categorias-platillos", methods=["GET"])
 @jwt_required()
-def listar_categorias():
-    return CatalogoService.listar_categorias()
+def obtener_categorias_activas():
+    return CatalogoService.obtener_categorias_activas()

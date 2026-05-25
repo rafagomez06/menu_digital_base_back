@@ -6,7 +6,7 @@ URL_PREFIX = '/api/v1'
 UPLOAD_FOLDER = 'static/uploads/platillos'
 
 # Mensajes validaciones
-ADMIN_EXISTENTE = 'Este usuario Administrador ya existe, intenta con otro.'
+ADMIN_EXISTENTE = 'Este usuario Administrador ya existe, intenta con otro nombre.'
 ADMIN_CREADO_EXITOSAMENTE = 'Administrador creado Exitosamente.'
 ADMIN_NO_EXISTE = 'Este usuario Administrador No existe, intenta nuevamente.'
 PASSWORD_CORTO = 'La contraseña debe tener al menos 6 caracteres.'
@@ -29,7 +29,7 @@ IMAGEN_ERROR = 'Archivo inválido. Asegúrate de subir una imagen real (JPG, PNG
 ERROR_GET = 'Error al consultar la información.'
 ERROR_EMPTY ='No se encontraron registros.'
 DATA_EMPTY ='No se recibió información.'
-CREDENCIALES_FALLIDAS = 'Credenciales Incorrectas.'
+CREDENCIALES_FALLIDAS = 'Credenciales Incorrectas, Intenta nuevamente.'
 
 LOGIN_SUCCESS = 'Login exitoso.'
 

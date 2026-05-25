@@ -1,8 +1,8 @@
-from app.models.menu import (
+from app.models.MenuModel import (
     CtlPlatillos,
 )
-from app.models.catalogo import (
+from app.models.CatalogoModel import (
     CatCategoriasPlatillos,
 )
 
-from app.models.usuario import UsuarioAdmin
+from app.models.UsuarioModel import UsuarioAdmin

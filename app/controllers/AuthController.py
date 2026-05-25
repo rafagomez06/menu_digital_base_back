@@ -1,7 +1,7 @@
 from flask import Blueprint, request
 from flask_jwt_extended import create_access_token, jwt_required, get_jwt_identity
 
-from app.models.usuario import UsuarioAdmin
+from app.models.UsuarioModel import UsuarioAdmin
 from app.utils.response import api_response
 from app.utils.RaiseException import MissingValueError, UnauthorizedError, UnexpectedError
 from app.utils.Logger import logger

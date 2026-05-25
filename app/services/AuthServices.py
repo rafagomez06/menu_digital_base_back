@@ -1,6 +1,7 @@
 from flask_jwt_extended import create_access_token
 from sqlalchemy.exc import SQLAlchemyError
-from app.models.usuario import UsuarioAdmin
+from app.models.UsuarioModel import UsuarioAdmin
+from app.repositories.AuthRepository import AuthRepository
 from app.utils.response import api_response
 from app.utils.RaiseException import UnexpectedError
 from app.utils.Logger import logger
@@ -15,12 +16,11 @@ class AuthServices:
     @staticmethod
     def login_admin(data):
         try:
-            # Buscamos si existe el admin.
-            usuarioActivo = db.session.query(UsuarioAdmin).filter_by(
-                        nombre=data["nombre_usuario"].strip() 
-                        ).first()
+            # validamos que exista el usuario
+            nombre_usuario = data["nombre_usuario"].strip() 
+            usuario_activo = AuthRepository.obtener_usuario_por_nombre_activo(nombre_usuario)
 
-            if not usuarioActivo:
+            if not usuario_activo:
                 return api_response(STATUS_CODE_404, "",ERROR,ADMIN_NO_EXISTE)
 
             # Validamos y controlamos entrada de datos
@@ -32,22 +32,16 @@ class AuthServices:
             nombre_usuario = data["nombre_usuario"].strip()
             password = data["password"]
 
-            usuario = UsuarioAdmin.query.filter_by(nombre=nombre_usuario).first()
-
-            if not usuario or not usuario.check_password(password):
+            if not usuario_activo or not usuario_activo.check_password(password):
                 LOG.warning(f"Intento de login fallido para usuario: {nombre_usuario}")
                 return api_response(STATUS_CODE_401, "",ERROR,CREDENCIALES_FALLIDAS)                
 
-            token = create_access_token(identity=str(usuario.id))
+            token = create_access_token(identity=str(usuario_activo.id))
             LOG.info(f"Login exitoso: {nombre_usuario}")
             
             return api_response(STATUS_CODE_200, {
                     "token": token,
-                    "usuario": usuario.to_dict()},SUCCESS,LOGIN_SUCCESS)
-        
-        except SQLAlchemyError as e: 
-            LOG.error(f"DB error en login_admin(): {str(e)}")
-            raise DatabaseError("Error al consultar la base de datos")
+                    "usuario": usuario_activo.to_dict()},SUCCESS,LOGIN_SUCCESS)
         except ValueError as e: 
             LOG.warning(f"Parámetro inválido: {str(e)}")
             raise UnexpectedError("Parámetros de búsqueda inválidos")
@@ -78,23 +72,21 @@ class AuthServices:
             password = data["password"]
             
             # Validar que no exista el admin
-            usuario_existente = UsuarioAdmin.query.filter_by(nombre=nombre_usuario).first()
+            usuario_existente = AuthRepository.obtener_usuario_por_nombre_activo(nombre_usuario)
+
             if usuario_existente:
                 return api_response(STATUS_CODE_400,{},ERROR,ADMIN_EXISTENTE)
 
             # Creamos nuevo admin
             nuevo_admin = UsuarioAdmin(nombre=nombre_usuario)
             nuevo_admin.set_password(password) 
-            db.session.add(nuevo_admin)
-            db.session.commit()
+
+            administrador_creado = AuthRepository.crear_administrador(nuevo_admin)
             
             LOG.info(f"# Nuevo admin creado: {nombre_usuario}")
             
-            return api_response(STATUS_CODE_201,{},SUCCESS,ADMIN_CREADO_EXITOSAMENTE)                
 
-        except SQLAlchemyError as e: 
-            LOG.error(f"DB error en registrar_admin(): {str(e)}")
-            raise DatabaseError("Error al consultar la base de datos")
+            return api_response(STATUS_CODE_201,administrador_creado.to_dict(),SUCCESS,ADMIN_CREADO_EXITOSAMENTE)                
         except ValueError as e: 
             LOG.warning(f"Parámetro inválido: {str(e)}")
             raise UnexpectedError("Parámetros de búsqueda inválidos")
