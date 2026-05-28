@@ -1,6 +1,6 @@
---DROP TABLE ctl_platillos
+--DROP TABLE ctl_platillos_menu
 
-CREATE TABLE ctl_platillos (
+CREATE TABLE ctl_platillos_menu (
     id_platillo SERIAL PRIMARY KEY,
     nombre VARCHAR(100) NOT NULL,
     precio DECIMAL(10,2) NOT NULL CHECK (precio >= 0),

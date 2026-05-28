@@ -18,6 +18,5 @@ def listar_apis():
 ###### Punto de entrada ###########
 
 if __name__ == "__main__":
-    print("# AQUI ENTRA")
     listar_apis()
     app.run(host="0.0.0.0", port=5000, debug=True)

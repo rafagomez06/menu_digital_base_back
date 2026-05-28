@@ -6,11 +6,11 @@ URL_PREFIX = '/api/v1'
 UPLOAD_FOLDER = 'static/uploads/platillos'
 
 # Mensajes validaciones
-ADMIN_EXISTENTE = 'Este usuario Administrador ya existe, intenta con otro nombre.'
+ADMIN_EXISTENTE = 'Este usuario/correo de administrador ya existe, intenta con otro correo.'
 ADMIN_CREADO_EXITOSAMENTE = 'Administrador creado Exitosamente.'
 ADMIN_NO_EXISTE = 'Este usuario Administrador No existe, intenta nuevamente.'
 PASSWORD_CORTO = 'La contraseña debe tener al menos 6 caracteres.'
-
+CORREO_INVALIDO = 'Formato de correo inválido.'
 USER_CORTO = 'El Nombre de usuario debe tener más de 3 caracteres.'
 CAMPOS_REQUERIDOS = 'Faltan campos por ingresar.'
 

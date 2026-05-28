@@ -11,16 +11,16 @@ LOG = logger()
 class AuthRepository:
 
     @staticmethod
-    def obtener_usuario_por_nombre_activo(nombre_usuario):
+    def obtener_usuario_por_correo_activo(correo):
         try:
             # valida que exista el usuario y este activo
             usuario_id = UsuarioAdmin.query.filter_by(
-                        nombre=nombre_usuario,
+                        correo=correo,
                         activo=1
                         ).first()
             return usuario_id
         except SQLAlchemyError as e:
-            LOG.error(f"DB error en obtener_usuario_por_nombre_activo: {str(e)}")
+            LOG.error(f"DB error en obtener_usuario_por_correo_activo: {str(e)}")
             raise DatabaseError("Error al consultar la base de datos")   
     
     @staticmethod

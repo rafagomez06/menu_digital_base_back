@@ -1,8 +1,6 @@
 from app.main import db
 from sqlalchemy import (
-    Column, Integer, String, Numeric,
-    ForeignKey, CheckConstraint, func,
-    DateTime
+    Column, Integer, String,DateTime
 )
 from sqlalchemy.orm import  relationship
 from datetime import datetime
@@ -13,7 +11,7 @@ class UsuarioAdmin(db.Model):
     __tablename__ = "ctl_usuarios_sistema_menu"
 
     id = Column( Integer, primary_key=True)
-    nombre = Column( String(100), nullable=False, unique=True)
+    correo = Column( String(100), nullable=False, unique=True)
     password_hash = Column( String(255), nullable=False)
     fecha_creacion = Column( DateTime, default=datetime.utcnow)
     usuario_creacion = Column( String(100), nullable=True) 
@@ -30,10 +28,10 @@ class UsuarioAdmin(db.Model):
 
     def to_dict(self):
         return {
-            "id":         self.id,
-            "nombre":   self.nombre,
+            "id": self.id,
+            "correo": self.correo,
             "fecha_creacion": self.fecha_creacion.strftime("%Y-%m-%d %H:%M:%S") if self.fecha_creacion else None,
         }
 
     def __repr__(self):
-        return f"<UsuarioAdmin {self.nombre}>"
+        return f"<UsuarioAdmin {self.correo}>"

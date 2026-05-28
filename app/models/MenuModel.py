@@ -8,14 +8,14 @@ from sqlalchemy.orm import  relationship
 from datetime import datetime
 
 class CtlPlatillos(db.Model):
-    __tablename__ = 'ctl_platillos'
+    __tablename__ = 'ctl_platillos_menu'
 
     id_platillo = Column(Integer, primary_key=True, autoincrement=True)
     nombre = Column(String(100), nullable=False)
     precio = Column(Numeric(10, 2), nullable=False)
     categoria_platillo_fk = Column(
         Integer,
-        ForeignKey('cat_categorias_platillos.id_categoria', ondelete='RESTRICT'),
+        ForeignKey('cat_categorias_platillos_menu.id_categoria', ondelete='RESTRICT'),
         nullable=False
     )
     descripcion = Column(String(350), nullable=False)

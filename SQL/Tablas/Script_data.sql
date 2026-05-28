@@ -1,23 +1,24 @@
 /*
-DROP TABLE cat_categorias_platillos;
-DROP TABLE ctl_platillos;
+DROP TABLE cat_categorias_platillos_menu;
+DROP TABLE ctl_platillos_menu;
 DROP TABLE ctl_usuarios_sistema_menu;
-
+--Reinicia tablas
+TRUNCATE TABLE cat_categorias_platillos RESTART IDENTITY CASCADE;
 */
 ------
 
 
-CREATE TABLE cat_categorias_platillos (
+CREATE TABLE cat_categorias_platillos_menu (
     id_categoria SERIAL PRIMARY KEY,
     descripcion VARCHAR(30),
     activo INTEGER DEFAULT 1 CHECK (activo IN (0, 1))
 );
 
-CREATE TABLE ctl_platillos (
+CREATE TABLE ctl_platillos_menu (
     id_platillo SERIAL PRIMARY KEY,
     nombre VARCHAR(100) NOT NULL,
     precio DECIMAL(10,2) NOT NULL CHECK (precio >= 0),
-    categoria_platillo_fk INTEGER NOT NULL REFERENCES cat_categorias_platillos(id_categoria) ON DELETE RESTRICT,
+    categoria_platillo_fk INTEGER NOT NULL REFERENCES cat_categorias_platillos_menu(id_categoria) ON DELETE RESTRICT,
     descripcion VARCHAR(300) NOT NULL,
     imagen_url VARCHAR(100) NOT NULL,
     popular SMALLINT DEFAULT 0 CHECK (popular IN (0, 1)),
@@ -27,12 +28,12 @@ CREATE TABLE ctl_platillos (
 
 CREATE TABLE ctl_usuarios_sistema_menu (
     id SERIAL PRIMARY KEY,
-    nombre VARCHAR(100) NOT NULL,
+    correo VARCHAR(100) NOT NULL,
     password_hash VARCHAR(255) NOT NULL,
     activo INTEGER DEFAULT 1 CHECK (activo IN (0, 1)),
     fecha_creacion TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    usuario_creacion VARCHAR(100) NOT NULL,
-    host_creacion VARCHAR(100) NOT NULL,
+    usuario_creacion VARCHAR(100) NULL,
+    host_creacion VARCHAR(100) NULL,
     fecha_modificacion TIMESTAMP,
     usuario_modificacion VARCHAR(100)
 );
@@ -41,10 +42,10 @@ CREATE TABLE ctl_usuarios_sistema_menu (
 
 
 ----------------CARGA INICIAL DE DATOS--------------
-INSERT INTO ctl_usuarios_sistema (nombre, password_hash,usuario_creacion,host_creacion) VALUES
-	('admin','ADMIN1234','admin',inet_client_addr());
+INSERT INTO ctl_usuarios_sistema_menu (correo, password_hash) VALUES
+	('admin@gmail.com','admin123');
 
-INSERT INTO cat_categorias_platillos (descripcion) VALUES 
+INSERT INTO cat_categorias_platillos_menu (descripcion) VALUES 
     ('Entradas'),
     ('Rollos Naturales'),
     ('Rollos Empanizados'),
@@ -54,7 +55,7 @@ INSERT INTO cat_categorias_platillos (descripcion) VALUES
     ('Postres'),
     ('Ingrediente Extra');
 
-INSERT INTO ctl_platillos (nombre,precio,categoria_platillo_fk,descripcion,imagen_url) VALUES
+INSERT INTO ctl_platillos_menu (nombre,precio,categoria_platillo_fk,descripcion,imagen_url) VALUES
 ('Mar y Tierra',110,4,'Sushi Clasico mar y tierra','uploads/img/mar_tierra_sushi.jpg'),
 ('Tostadas de Ceviche', 85, 2, 'Tostadas crujientes con ceviche de pescado fresco, cebolla morada y cilantro', 'uploads/img/tostadas_ceviche.jpg'),
 ('Ramen Tonkotsu', 120, 4, 'Caldo de cerdo cremoso con fideos artesanales, chashu, huevo marinado y cebollín', 'uploads/img/ramen_tonkotsu.jpg'),
@@ -69,10 +70,9 @@ INSERT INTO ctl_platillos (nombre,precio,categoria_platillo_fk,descripcion,image
 
 
 ---QUERY CON DATOS CARGADOS-------
-SELECT * FROM ctl_platillos ctl
-Inner join cat_categorias_platillos ct
+SELECT * FROM ctl_platillos_menu ctl
+Inner join cat_categorias_platillos_menu ct
 ON ctl.categoria_platillo_fk = ct.id_categoria
 
 
---Reinicia tablas
-TRUNCATE TABLE cat_categorias_platillos RESTART IDENTITY CASCADE;
+

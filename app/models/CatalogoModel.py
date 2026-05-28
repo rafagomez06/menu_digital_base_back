@@ -7,7 +7,7 @@ from sqlalchemy.orm import  relationship
 ## Modelos de tablas de catalogos
 
 class CatCategoriasPlatillos(db.Model):
-    __tablename__ = 'cat_categorias_platillos'
+    __tablename__ = 'cat_categorias_platillos_menu'
     id_categoria = Column(Integer, primary_key=True, autoincrement=True)
     descripcion = Column(String(30), nullable=True)
     activo = Column(Integer, default=1, nullable=True)
